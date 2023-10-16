@@ -15,7 +15,7 @@
   - logicChart.getTimingGroupEventsUnchecked(`int` idx)
 - 在timingGroup中添加了获取指定事件的方法
   - timingGroup.getEventsByType(`class` t, `bool` toList)
-  - timingGroup.getEventsIterableByType(t `class`)
+  - timingGroup.getEventsIterableByType(`class` t)
   - timingGroup.getEventsBy(`lambda` t, `bool` toList)
   - timingGroup.getEventsIterableBy(`lambda` t)
 
