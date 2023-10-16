@@ -9,6 +9,15 @@
 - 上传到GitHub
 - 修复algorithm中处理计算Arc坐标相关函数错误的将SineOut和SineIn互相反着使用的问题
 
+> **v1.1.0 - 2023-10-16**
+- 添加了获取timingGroup事件列表的方法
+  - logicChart.getTimingGroupEvents(`int` idx)
+  - logicChart.getTimingGroupEventsUnchecked(`int` idx)
+- 在timingGroup中添加了获取指定事件的方法
+  - timingGroup.getEventsByType(`class` t, `bool` toList)
+  - timingGroup.getEventsIterableByType(t `class`)
+  - timingGroup.getEventsBy(`lambda` t, `bool` toList)
+  - timingGroup.getEventsIterableBy(`lambda` t)
 
 
 # 使用例
@@ -34,6 +43,6 @@ with open(chart_path, 'w') as f:
 ```python
 group_id = 0
 # 获取组0 (基准组) 中的所有事件
-base_group_events = chart.timingGroups[group_id].events 
+base_group_events = chart.getTimingGroupEvents(group_id) 
 ```
 

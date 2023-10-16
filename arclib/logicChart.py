@@ -339,6 +339,24 @@ class timingGroup:
         if isInGroup:
             rawlines.append('};')
         return '\n'.join(rawlines)
+    
+    def getEventsByType(self, t, toList=False):
+        r = filter(lambda e: isinstance(e, t), self.events)
+        if toList:
+            return list(r)
+        return r
+    
+    def getEventsIterableByType(self, t):
+        return filter(lambda e: isinstance(e, t), self.events)
+    
+    def getEventsBy(self, t, toList=False):
+        r = filter(t, self.events)
+        if toList:
+            return list(r)
+        return r
+    
+    def getEventsIterableBy(self, t):
+        return filter(t, self.events)
 
 _AUDIO_OFFSET_KEY = 'AudioOffset:'
 _TIMING_POINT_DENSITY_FACTOR_KEY = 'TimingPointDensityFactor:'
@@ -393,7 +411,7 @@ class logicChart:
     def __reg(self):
         self.audioOffset = 0
         self.timingPointDensityFactor = 1
-        self.rawCommentLines = []
+        self.metadataLines = []
         self.timingGroups = [timingGroup(0)]
 
     def __parse(self, rawLines:'list[str] | str'):
@@ -415,7 +433,7 @@ class logicChart:
                 self.timingPointDensityFactor = tryParseFloat(line)[1]
                 continue
 
-            self.rawCommentLines.append(line)
+            self.metadataLines.append(line)
 
         maxTimingGroupId = 0
         currentTimingGroupId = 0
@@ -446,6 +464,14 @@ class logicChart:
         self.timingGroups = list(sorted(self.timingGroups, key=lambda t: t.groupId))
         for tg in self.timingGroups:
             tg.sortEvents(False)
+    
+    def getTimingGroupEvents(self, idx):
+        if idx < 0 or idx > len(self.timingGroups):
+            raise IndexError()
+        return self.timingGroups[idx].events
+
+    def getTimingGroupEventsUnchecked(self, idx):
+        return self.timingGroups[idx].events
 
     def __str__(self) -> str:
         lines = []
@@ -454,7 +480,7 @@ class logicChart:
         if self.timingPointDensityFactor != 1:
             lines.append(f'{_TIMING_POINT_DENSITY_FACTOR_KEY}' +
                 f'{self.timingPointDensityFactor}')
-        lines += self.rawCommentLines
+        lines += self.metadataLines
         lines.append('-')
 
         lines += [tg.__str__() for tg in self.timingGroups]
