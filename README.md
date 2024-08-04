@@ -31,7 +31,7 @@
 
 读取谱面与保存谱面
 ```python
-from arclib.logChart import *
+from arclib.logicChart import *
 
 # 读取谱面
 chart_path = 'input.aff'
