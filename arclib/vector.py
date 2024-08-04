@@ -13,7 +13,7 @@ class vec2:
         else:
             raise TypeError('x or y is None or not number.')
         
-    @staticmethod   
+    @staticmethod
     def parse(t):
         return vec2(float(t[0]), float(t[1]))
 
@@ -63,7 +63,7 @@ class vec3:
         else:
             raise TypeError('x or y or z is None or not number.')
 
-    @staticmethod   
+    @staticmethod
     def parse(t):
         return vec3(float(t[0]), float(t[1]), float(t[2]))
     

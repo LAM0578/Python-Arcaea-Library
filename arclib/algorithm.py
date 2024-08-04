@@ -19,10 +19,10 @@ def bezier(a, b, t):
 
 _ARC_X_FUNCTION = {
     's': straight,
-    'si': sineIn,
+    'si': sineOut,
     'sisi': sineOut,
     'siso': sineOut,
-    'so': sineOut,
+    'so': sineIn,
     'sosi': sineIn,
     'soso': sineIn,
     'b': bezier
@@ -32,9 +32,9 @@ _ARC_Y_FUNCTION = {
     's': straight,
     'si': straight,
     'sisi': sineOut,
-    'siso': sineOut,
+    'siso': sineIn,
     'so': straight,
-    'sosi': sineIn,
+    'sosi': sineOut,
     'soso': sineIn,
     'b': bezier
 }
@@ -65,16 +65,16 @@ def cubicIn(a, b, t):
 def cubicOut(a, b, t):
     return a + (b - a) * ((t - 1) ** 3 + 1)
     
-_CAMERA_EASING = ['reset', 'l', 's', 'qi', 'qo']
+_CAMERA_EASING = ['reset', 'qi', 'qo']
 
 _CAMERA_FUNCTION = {
-    'l': straight, # Linear
-    's': straight, # Straight
     'qi': cubicIn, # Cubic In
     'qo': cubicOut # Cubic Out
 }
 
 def checkCameraEasing(e):
+    if e == 'reset':
+        return False	
     return e in _CAMERA_EASING
 
 def calculateCamera(start:vec3, end:vec3, cameraEasing:str, t:float):

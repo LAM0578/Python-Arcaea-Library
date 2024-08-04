@@ -166,6 +166,27 @@ class arcNote(longNote):
             result += f'[{at_str}]'
         result += ';'
         return result
+        
+    def xAt(self, p):
+        return calculate_x(self.start.x, self.end.y, self.lineType, p)
+        
+    def yAt(self, p):
+        return calculate_y(self.start.y, self.end.y, self.lineType, p)
+        
+    def posAt(self, p):
+        return calculate(self.start, self.end, self.lineType, p)
+        
+    def xAtTiming(self, t):
+        p = (t - self.tick) / (self.endTick - self.tick)
+        return self.xAt(p)
+    
+    def yAtTiming(self, t):
+        p = (t - self.tick) / (self.endTick - self.tick)
+        return self.yAt(p)
+    
+    def posAtTiming(self, t):
+        p = (t - self.tick) / (self.endTick - self.tick)
+        return self.posAt(p)
 
 class flickNote(affEvent):
     def __init__(self, tick:int, pos:vec2, vec:vec2) -> None:
@@ -321,6 +342,9 @@ class timingGroup:
                 attr_str.append(f'angley{self._angle.y}')
             attr_str += self.rawAttributes
             return '_'.join(attr_str) if len(attr_str) > 0 else ''
+	
+    def rawAttributes(self):
+        return self.__rawAttributes__()
 
     def sortEvents(self, isByTiming: bool) -> None:
         self.events = list(sorted(self.events, key=lambda t: t.tick))
@@ -332,9 +356,9 @@ class timingGroup:
         rawlines = []
         if isInGroup:
             rawlines.append(f'timinggroup({self.__rawAttributes__()}){{')
-        tokenHead = '  ' if isInGroup else ''
+        indent = '  ' if isInGroup else ''
         rawlines += [
-            tokenHead + str(event) for event in self.events
+            indent + str(event) for event in self.events
         ]
         if isInGroup:
             rawlines.append('};')
@@ -357,7 +381,37 @@ class timingGroup:
     
     def getEventsIterableBy(self, t):
         return filter(t, self.events)
+        
+    def getEventsInRange(self, t, et):
+        r = []
+        for e in self.events:
+            if isinstance(e, (arcNote, holdNote)):
+                if t <= e.tick <= et and t <= e.endTick <= et:
+                    r.append(e)
+                continue
+            if t <= e.tick <= et:
+                r.append(e)
+        return r
+        
+    def getEventsInRangeWithType(self, t, et, ft):
+        r = []
+        for e in self.events:
+            if not isinstance(e, ft):
+                continue
+            if isinstance(e, (arcNote, holdNote)):
+                if t <= e.tick <= et and t <= e.endTick <= et:
+                    r.append(e)
+                continue
+            if t <= e.tick <= et:
+                r.append(e)
+        return r
 
+    def getEventAtTiming(self, t, ft):
+        for e in self.events:
+            if isinstance(e, ft) and t >= e.tick:
+                return e
+        return None
+    
 _AUDIO_OFFSET_KEY = 'AudioOffset:'
 _TIMING_POINT_DENSITY_FACTOR_KEY = 'TimingPointDensityFactor:'
 

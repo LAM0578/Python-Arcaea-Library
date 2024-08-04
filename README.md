@@ -19,6 +19,13 @@
   - timingGroup.getEventsBy(`lambda` t, `bool` toList)
   - timingGroup.getEventsIterableBy(`lambda` t)
 
+> **v1.2.0 - 2024-08-04**
+- 修复了部分缓动类型使用了错误函数的问题
+- 修复了camera缓动描述错误的问题=
+- 添加了一些获取事件的方法
+  - timingGroup.getEventsInRange(`int` t, `int` et)
+  - timingGroup.getEventsInRangeWithType(`int` t, `int` et, `class|tuple` ft)
+  - timingGroup.getEventAtTiming(`int` t, `class|tuple` ft)
 
 # 使用例
 
