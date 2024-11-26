@@ -97,7 +97,7 @@ class arcNote(longNote):
         tick:int, endTick:int,
         start:vec2, end:vec2,
         lineType:str, color:int,
-        sfxName: str, isTrace:bool, 
+        sfxName: str, arcType:str,
         arcTaps:'list[int]'
     ) -> None:
         super().__init__(tick, endTick)
@@ -108,7 +108,9 @@ class arcNote(longNote):
         self.lineType = lineType
         self.color = color
         self.sfxName = sfxName
-        self.isTrace = isTrace
+        arcType = arcType.lower()
+        self.arcType = arcType
+        self.isTrace = arcType != 'false'
         self.arcTaps = arcTaps
     
     @property
@@ -136,12 +138,12 @@ class arcNote(longNote):
         return arcNote(
             int(splits[0]), # tick
             int(splits[1]), # end tick
-            vec2(parseFloat(splits[2]), parseFloat(splits[5])), # start position
-            vec2(parseFloat(splits[3]), parseFloat(splits[6])), # end position
+            vec2(float(splits[2]), float(splits[5])), # start position
+            vec2(float(splits[3]), float(splits[6])), # end position
             splits[4], # arc easing type
             int(splits[7]), # color id
             splits[8], # sfx reference name
-            parseBool(splits[9]), # is trace (void)
+            splits[9], # arc type (arc, trace, designant trace | false, true, designant)
             arcTaps # arctap notes
         )
 
@@ -160,7 +162,7 @@ class arcNote(longNote):
     def __str__(self) -> str:
         result = (f'arc({self.tick},{self.endTick},' +
                 f'{self.__xArg__()},{self.lineType},{self.__yArg__()},' +
-                f'{self.color},{self.sfxName},{str(self.isTrace).lower()})')
+                f'{self.color},{self.sfxName},{self.arcType})')
         if self.arcTaps != []:
             at_str = ','.join([f'arctap({at})' for at in self.arcTaps])
             result += f'[{at_str}]'

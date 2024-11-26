@@ -27,6 +27,9 @@
   - timingGroup.getEventsInRangeWithType(`int` t, `int` et, `class|tuple` ft)
   - timingGroup.getEventAtTiming(`int` t, `class|tuple` ft)
 
+> **v1.3.0 - 2024-11-26**
+- 对任意类型的 Arc 进行支持
+
 # 使用例
 
 读取谱面与保存谱面
